@@ -1,5 +1,3 @@
-from nonebot import on_command
-
 from hoshino import Service, priv
 from hoshino.typing import CQEvent
 from .dao.timelinesqlitedao import TLSqliteDao
