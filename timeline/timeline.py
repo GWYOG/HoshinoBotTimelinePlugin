@@ -1,3 +1,5 @@
+from nonebot import on_command
+
 from hoshino import Service, priv
 from hoshino.typing import CQEvent
 from .dao.timelinesqlitedao import TLSqliteDao
@@ -25,7 +27,7 @@ def tid2id(tid):
 def get_dbname(group_id):
     db = TLDBNameDao(group_id)
     return db._find_by_id(group_id)
-
+  
 
 @sv.on_prefix(('查看轴库名', '查询轴库名'))
 async def search_dbname(bot, ev: CQEvent):
@@ -70,9 +72,13 @@ async def approve_timeline(bot, ev: CQEvent):
 @sv.on_prefix(('录入轴', '上传轴', '添加轴'))
 async def insert_timeline(bot, ev: CQEvent):
     try:
-        s = ev.message.extract_plain_text().split(' ', 3)
+        msg = ev.message
+        s = ''
+        for seg in msg:
+            s += ' ' + str(seg).strip()
+        s = s.lstrip().split(' ', 3)
         db = TLSqliteDao(get_dbname(ev.group_id))
-        db._insert(s[0], s[1], s[2], s[3], ev.user_id)
+        db._insert(s[0], s[1], s[2], s[3].strip(), ev.user_id)
         await bot.send(ev, '录入完毕!')
     except:
         await bot.send(ev, '录入轴失败，请输入\"帮助pcr轴\"查看指令的使用方式')
@@ -104,10 +110,14 @@ async def search_timeline(bot, ev: CQEvent):
 @sv.on_prefix(('修改轴', '更新轴'))
 async def update_timeline(bot, ev: CQEvent):
     try:
-        s = ev.message.extract_plain_text().split(' ', 3)
+        msg = ev.message
+        s = ''
+        for seg in msg:
+            s += ' ' + str(seg).strip()
+        s = s.lstrip().split(' ', 3)
         db = TLSqliteDao(get_dbname(ev.group_id))
         userid = 999 if priv.check_priv(ev, priv.ADMIN) else ev.user_id
-        if db._update_by_id(tid2id(s[0]), s[1], s[2], s[3], userid):
+        if db._update_by_id(tid2id(s[0]), s[1], s[2], s[3].strip(), userid):
             await bot.send(ev, f'修改轴{s[0]}成功')
         else:
             await bot.send(ev, '您非该轴的上传者或管理员，无修改权限')
