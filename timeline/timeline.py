@@ -4,8 +4,8 @@ from .dao.timelinesqlitedao import TLSqliteDao
 from .dao.dbnamesqlitedao import TLDBNameDao
 
 sv = Service('timeline', bundle='pcr轴', help_='''
-录入轴 <A/B><1/2/3/4/5> <伤害> <说明> <轴>
-查找轴 [A/B][1/2/3/4/5]
+录入轴 <A/B/C><1/2/3/4/5> <伤害> <说明> <轴>
+查找轴 [A/B/C][1/2/3/4/5]
 查找轴 [编号]
 更新轴 <编号> <伤害> <说明> <轴>
 删除轴 <编号>
